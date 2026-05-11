@@ -2,7 +2,7 @@
 
 Cultivate the Invisible System.
 
-YOZI Dao Runtime is a lightweight React homepage built around a code-only symbolic animation: a Living Code Tree that grows from text symbols, stabilizes into a loose eight-direction Bagua matrix, and quietly breathes behind the hero title.
+YOZI Dao Runtime is a lightweight React homepage built around a code-only symbolic animation: a sand garden of glyphs, Bagua marks, rake lines, and quiet motion behind the hero title.
 
 The current visual direction is Song dynasty minimalism meets a code-based metaphysics interface. It avoids concrete illustration, cyberpunk neon, Matrix rain, heavy images, and noisy particle systems.
 
@@ -10,8 +10,8 @@ The current visual direction is Song dynasty minimalism meets a code-based metap
 
 - React + Vite + Tailwind CSS homepage.
 - Canvas-based `YoziSymbolicOrganism` hero background.
-- Living Code Tree made from Bagua symbols, code marks, Chinese characters, and small text tokens.
-- Gentle branch growth, eight-direction matrix stabilization, breathing motion, pointer response, and scroll dispersal.
+- Symbol garden made from Bagua symbols, code marks, Chinese characters, rake lines, and small text tokens.
+- Gentle garden reveal, eight-direction Bagua placement, breathing motion, pointer response, and scroll dispersal.
 - Small seated "Code Hermit" drawn with simple Canvas lines and code-like symbols.
 - Responsive desktop and mobile composition.
 - `prefers-reduced-motion` support.

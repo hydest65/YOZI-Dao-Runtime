@@ -1,6 +1,6 @@
 ---
 name: yozi-dao-runtime-memory
-description: Project memory for the YOZI Dao Runtime homepage. Use when continuing work on the YOZI homepage, Living Code Tree animation, Code Hermit figure, React + Tailwind implementation, or when the user asks to recall prior design and engineering decisions for this project.
+description: Project memory for the YOZI Dao Runtime homepage. Use when continuing work on the YOZI homepage, symbolic sand garden animation, Code Hermit figure, React + Tailwind implementation, or when the user asks to recall prior design and engineering decisions for this project.
 ---
 
 # YOZI Dao Runtime Memory
@@ -31,15 +31,14 @@ The homepage is a minimal hero for:
 
 The visual style should remain poetic, restrained, warm, and premium: Song dynasty minimalism plus a code-metaphysics interface. Avoid cyberpunk neon, Matrix rain, noisy particles, concrete imagery, mountains, temples, fantasy costumes, anime styling, or cute cartoon treatments.
 
-## Living Code Tree
+## Symbol Sand Garden
 
 `YoziSymbolicOrganism` renders a lightweight Canvas animation:
 
-- Root node near lower center.
-- Branches made from text/code symbols.
-- Text nodes instead of circles.
-- Low-opacity connecting lines.
-- Growth sequence that stabilizes into an eight-direction Bagua-inspired matrix.
+- Symbolic center near lower middle.
+- Rake-like ellipses and sparse horizontal sand paths.
+- Text/code symbols as glyph stones rather than circles.
+- Eight-direction Bagua-inspired orientation.
 - Subtle breathing via opacity and scale.
 - Pointer interaction that gently repels or leans nearby nodes.
 - Scroll dispersal into a sparse symbol field.
@@ -54,7 +53,7 @@ Important symbols include:
 A small secondary figure was added inside the same Canvas layer:
 
 - Minimal ASCII/SVG-style line figure.
-- Seated under the Living Code Tree, anchored near the root.
+- Seated near the symbolic sand garden, anchored close to the center field.
 - No robes, face details, religious costume, fantasy design, or realistic illustration.
 - Made from simple Canvas lines and code-like marks such as `::` and `>_`.
 - Includes a small terminal and a small cup.
@@ -62,18 +61,18 @@ A small secondary figure was added inside the same Canvas layer:
 - Head subtly turns toward the cursor.
 - Occasionally shows one tiny terminal line:
   - `> breath.sync = true`
-  - `> observe(branch)`
+  - `> observe(sand)`
   - `> stillness.log()`
   - `> cultivation.progress += 0.01`
 
-Keep it secondary to the symbolic organism.
+Keep it secondary to the symbolic garden.
 
 ## Responsive Notes
 
-Mobile layout was checked at `390x844`. The root was moved lower on compact screens to avoid colliding with the subtitle:
+Mobile layout was checked at `390x844`. Keep the symbolic center low enough to avoid colliding with the subtitle:
 
-- Compact root Y: about `height * 0.72`
-- Compact spread: about `min(width, height) * 0.27`
+- Compact center Y: about `height * 0.68`
+- Compact radius: about `min(width, height) * 0.26`
 
 Desktop and mobile browser checks had no console errors.
 

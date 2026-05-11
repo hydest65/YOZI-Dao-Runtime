@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 const BAGUA = ["☰", "☱", "☲", "☳", "☴", "☵", "☶", "☷"];
-const CODE_SYMBOLS = [
+const SYMBOLS = [
   "{",
   "}",
   "[",
@@ -37,108 +37,77 @@ const CODE_SYMBOLS = [
 ];
 const HERMIT_LINES = [
   "> breath.sync = true",
-  "> observe(branch)",
+  "> observe(sand)",
   "> stillness.log()",
-  "> cultivation.progress += 0.01",
+  "> rake(void)",
 ];
 
-const pick = (items, index) => items[index % items.length];
-const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+const pick = (items, index) => items[index % items.length];
 
-function createNodes(width, height) {
+function createGarden(width, height) {
   const compact = width < 720;
-  const rootX = width * 0.5;
-  const rootY = height * (compact ? 0.72 : 0.66);
-  const depthCount = compact ? 4 : 5;
-  const branchCount = compact ? 6 : 8;
-  const spread = Math.min(width, height) * (compact ? 0.27 : 0.38);
-  const nodes = [
-    {
-      id: 0,
-      parent: -1,
-      label: "道",
-      born: 0,
-      x: rootX,
-      y: rootY,
-      tx: rootX,
-      ty: rootY,
-      mx: rootX,
-      my: rootY,
-      size: compact ? 20 : 24,
-      bagua: false,
-      phase: 0,
-    },
-  ];
+  const cx = width * (compact ? 0.5 : 0.57);
+  const cy = height * (compact ? 0.68 : 0.6);
+  const radius = Math.min(width, height) * (compact ? 0.26 : 0.34);
+  const glyphs = [];
+  let id = 0;
 
-  let id = 1;
-  for (let branch = 0; branch < branchCount; branch += 1) {
-    const angle =
-      -Math.PI / 2 +
-      ((branch - (branchCount - 1) / 2) / Math.max(1, branchCount - 1)) *
-        Math.PI *
-        1.2;
-    const matrixAngle = -Math.PI / 2 + (branch / branchCount) * Math.PI * 2;
-    let parent = 0;
+  glyphs.push({
+    id: id++,
+    label: "道",
+    x: cx,
+    y: cy,
+    tx: cx,
+    ty: cy,
+    size: compact ? 22 : 27,
+    born: 0.08,
+    phase: 0,
+    anchor: true,
+  });
 
-    for (let depth = 1; depth <= depthCount; depth += 1) {
-      const bend = Math.sin(branch * 1.7 + depth * 0.9) * 0.24;
-      const distance = (spread / depthCount) * depth;
-      const x = rootX + Math.cos(angle + bend) * distance * (0.52 + depth * 0.1);
-      const y = rootY + Math.sin(angle + bend) * distance;
-      const ring = (spread / depthCount) * (depth + 1.2);
-      const tx = rootX + Math.cos(matrixAngle) * ring;
-      const ty = rootY + Math.sin(matrixAngle) * ring * 0.78;
-      const isOuter = depth === depthCount;
+  BAGUA.forEach((label, index) => {
+    const angle = -Math.PI / 2 + (index / BAGUA.length) * Math.PI * 2;
+    const orbit = radius * 0.92;
+    glyphs.push({
+      id: id++,
+      label,
+      x: cx + Math.cos(angle) * orbit * 0.22,
+      y: cy + Math.sin(angle) * orbit * 0.14,
+      tx: cx + Math.cos(angle) * orbit,
+      ty: cy + Math.sin(angle) * orbit * 0.68,
+      size: compact ? 21 : 27,
+      born: 0.18 + index * 0.055,
+      phase: index * 0.83,
+      anchor: true,
+    });
+  });
 
-      nodes.push({
-        id,
-        parent,
-        label: isOuter ? pick(BAGUA, branch) : pick(CODE_SYMBOLS, branch * 7 + depth * 5),
-        born: 0.1 + (depth / depthCount) * 0.5 + branch * 0.018,
-        x,
-        y,
-        tx,
-        ty,
-        mx: tx,
-        my: ty,
-        size: isOuter ? (compact ? 22 : 27) : compact ? 11 + depth : 12 + depth * 0.8,
-        bagua: isOuter,
-        phase: branch * 0.8 + depth * 0.46,
+  const rings = compact ? [0.32, 0.54, 0.75] : [0.26, 0.44, 0.62, 0.8];
+  rings.forEach((ring, ringIndex) => {
+    const count = compact ? 8 + ringIndex * 2 : 10 + ringIndex * 4;
+    for (let i = 0; i < count; i += 1) {
+      const angle = (i / count) * Math.PI * 2 + ringIndex * 0.38;
+      const jitter = Math.sin(i * 2.17 + ringIndex) * radius * 0.025;
+      const rx = radius * ring + jitter;
+      const ry = radius * ring * 0.48 + jitter * 0.55;
+      glyphs.push({
+        id: id++,
+        label: pick(SYMBOLS, i * 5 + ringIndex * 9),
+        x: cx + Math.cos(angle) * rx * 0.14,
+        y: cy + Math.sin(angle) * ry * 0.12,
+        tx: cx + Math.cos(angle) * rx,
+        ty: cy + Math.sin(angle) * ry,
+        size: compact ? 10 + ringIndex : 11 + ringIndex * 0.7,
+        born: 0.35 + ringIndex * 0.12 + i * 0.012,
+        phase: i * 0.47 + ringIndex,
+        anchor: false,
       });
-
-      parent = id;
-      id += 1;
-
-      if (!compact && depth > 1 && depth < depthCount && (branch + depth) % 2 === 0) {
-        const sideAngle = angle + bend + (branch % 2 ? -0.72 : 0.72);
-        const sideDistance = distance * 0.86;
-        const sx = rootX + Math.cos(sideAngle) * sideDistance * 0.72;
-        const sy = rootY + Math.sin(sideAngle) * sideDistance;
-        const stx = rootX + Math.cos(matrixAngle + 0.22) * ring * 0.82;
-        const sty = rootY + Math.sin(matrixAngle + 0.22) * ring * 0.64;
-
-        nodes.push({
-          id,
-          parent,
-          label: pick(CODE_SYMBOLS, branch * 11 + depth * 3),
-          born: 0.24 + (depth / depthCount) * 0.46 + branch * 0.014,
-          x: sx,
-          y: sy,
-          tx: stx,
-          ty: sty,
-          mx: stx,
-          my: sty,
-          size: 11,
-          bagua: false,
-          phase: branch * 0.9 + depth,
-        });
-        id += 1;
-      }
     }
-  }
+  });
 
-  return nodes;
+  return { cx, cy, radius, glyphs };
 }
 
 export function YoziSymbolicOrganism() {
@@ -156,8 +125,7 @@ export function YoziSymbolicOrganism() {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let width = 0;
     let height = 0;
-    let nodes = [];
-    let frame = 0;
+    let garden = createGarden(1, 1);
     let start = performance.now();
     let rafId = 0;
 
@@ -168,7 +136,7 @@ export function YoziSymbolicOrganism() {
       canvas.width = Math.floor(width * ratio);
       canvas.height = Math.floor(height * ratio);
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-      nodes = createNodes(width, height);
+      garden = createGarden(width, height);
     };
 
     const updateScroll = () => {
@@ -188,31 +156,106 @@ export function YoziSymbolicOrganism() {
       pointerRef.current.active = false;
     };
 
-    const drawGlyph = (node, x, y, alpha, scale) => {
+    const drawRakeLine = (cx, cy, rx, ry, alpha, reveal, offset = 0) => {
+      ctx.beginPath();
+      const startAngle = -Math.PI * 0.86 + offset;
+      const endAngle = startAngle + Math.PI * 2 * reveal;
+      for (let step = 0; step <= 72; step += 1) {
+        const t = step / 72;
+        const angle = startAngle + (endAngle - startAngle) * t;
+        const wave = Math.sin(angle * 3 + offset) * 2.2;
+        const x = cx + Math.cos(angle) * (rx + wave);
+        const y = cy + Math.sin(angle) * (ry + wave * 0.4);
+        if (step === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      }
+      ctx.strokeStyle = `rgba(43, 36, 26, ${alpha})`;
+      ctx.stroke();
+    };
+
+    const drawSandGarden = (elapsed, growth, scroll, breath) => {
+      const { cx, cy, radius } = garden;
+      const reveal = reducedMotion ? 1 : easeOutCubic(clamp(growth / 0.72, 0, 1));
+      const fieldDrift = scroll * Math.min(width, height) * 0.4;
+
       ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.translate(x, y);
-      ctx.scale(scale, scale);
-      ctx.font = `${node.bagua ? 500 : 400} ${node.size}px "Times New Roman", "Noto Serif CJK SC", serif`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillStyle = node.bagua ? "#15130f" : "#373126";
-      ctx.fillText(node.label, 0, 0);
+      ctx.translate(cx, cy);
+      ctx.scale(1 + breath - scroll * 0.02, 1 + breath - scroll * 0.02);
+      ctx.translate(-cx, -cy);
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.lineWidth = 0.8;
+
+      const rings = width < 720 ? 5 : 7;
+      for (let i = 0; i < rings; i += 1) {
+        const ring = i + 1;
+        const rx = radius * (0.18 + ring * 0.12) + Math.sin(elapsed * 0.22 + i) * 1.1;
+        const ry = rx * (width < 720 ? 0.52 : 0.46);
+        drawRakeLine(cx, cy, rx, ry, (0.09 - scroll * 0.035) * reveal, reveal, i * 0.11);
+      }
+
+      for (let lane = -2; lane <= 2; lane += 1) {
+        ctx.beginPath();
+        const y = cy + lane * radius * 0.13;
+        const laneReveal = reveal * (1 - Math.abs(lane) * 0.08);
+        const startX = cx - radius * 0.95;
+        const endX = startX + radius * 1.9 * laneReveal;
+        for (let step = 0; step <= 42; step += 1) {
+          const t = step / 42;
+          const x = startX + (endX - startX) * t + Math.cos(t * Math.PI * 2 + lane) * 1.1;
+          const yy = y + Math.sin(t * Math.PI * 2.2 + elapsed * 0.2 + lane) * 3;
+          if (step === 0) {
+            ctx.moveTo(x, yy);
+          } else {
+            ctx.lineTo(x, yy);
+          }
+        }
+        ctx.strokeStyle = `rgba(43, 36, 26, ${0.055 - scroll * 0.018})`;
+        ctx.stroke();
+      }
+
+      BAGUA.forEach((_, index) => {
+        const angle = -Math.PI / 2 + (index / 8) * Math.PI * 2;
+        const start = radius * 0.14;
+        const end = radius * 0.9 * reveal + fieldDrift * 0.28;
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(angle) * start, cy + Math.sin(angle) * start * 0.5);
+        ctx.lineTo(cx + Math.cos(angle) * end, cy + Math.sin(angle) * end * 0.68);
+        ctx.strokeStyle = `rgba(43, 36, 26, ${0.075 - scroll * 0.02})`;
+        ctx.stroke();
+      });
+
       ctx.restore();
     };
 
-    const drawCodeHermit = (root, elapsed, scroll) => {
+    const drawGlyph = (glyph, x, y, alpha, scale, elapsed) => {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.translate(x, y);
+      ctx.rotate(glyph.anchor ? 0 : Math.sin(elapsed * 0.22 + glyph.phase) * 0.03);
+      ctx.scale(scale, scale);
+      ctx.font = `${glyph.anchor ? 500 : 400} ${glyph.size}px "Times New Roman", "Noto Serif CJK SC", serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = glyph.anchor ? "#171510" : "#40382c";
+      ctx.fillText(glyph.label, 0, 0);
+      ctx.restore();
+    };
+
+    const drawCodeHermit = (elapsed, scroll) => {
       const compact = width < 720;
-      const breath = reducedMotion ? 0 : Math.sin(elapsed * 1.2) * 1.6;
-      const baseX = root.x;
-      const baseY = root.y + (compact ? 52 : 64);
-      const scale = compact ? 0.78 : 1;
+      const baseX = garden.cx + garden.radius * (compact ? -0.06 : 0.48);
+      const baseY = garden.cy + garden.radius * (compact ? 0.78 : 0.52);
+      const breath = reducedMotion ? 0 : Math.sin(elapsed * 1.2) * 1.5;
+      const scale = compact ? 0.74 : 0.92;
       const pointer = pointerRef.current;
       const dx = pointer.x - baseX;
-      const dy = pointer.y - baseY;
       const lean = pointer.active ? clamp(dx / 420, -0.16, 0.16) : 0;
       const headTurn = pointer.active ? clamp(dx / 260, -2.4, 2.4) : 0;
-      const alpha = 0.56 - scroll * 0.2;
+      const alpha = 0.54 - scroll * 0.2;
       const line = HERMIT_LINES[Math.floor(elapsed / 4.8) % HERMIT_LINES.length];
       const linePulse = reducedMotion ? 0.64 : Math.pow(Math.sin(elapsed * Math.PI / 4.8) * 0.5 + 0.5, 1.8);
 
@@ -264,12 +307,6 @@ export function YoziSymbolicOrganism() {
       ctx.fillText(">_", 26, 17);
 
       ctx.beginPath();
-      ctx.moveTo(-43, 29);
-      ctx.lineTo(43, 29);
-      ctx.strokeStyle = `rgba(38, 32, 24, ${alpha * 0.32})`;
-      ctx.stroke();
-
-      ctx.beginPath();
       ctx.moveTo(-47, 18);
       ctx.lineTo(-36, 18);
       ctx.quadraticCurveTo(-36, 27, -43, 27);
@@ -279,111 +316,53 @@ export function YoziSymbolicOrganism() {
 
       if (linePulse > 0.18 && scroll < 0.72) {
         ctx.globalAlpha = alpha * linePulse * (1 - scroll * 0.7);
-        ctx.font = `${compact ? 11 : 12}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
+        ctx.font = `${compact ? 10 : 12}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";
         ctx.fillStyle = "#4b4233";
-        ctx.fillText(line, 45, -2);
+        ctx.fillText(line, 44, -2);
       }
 
-      ctx.restore();
-
-      ctx.save();
-      ctx.globalAlpha = (0.18 - scroll * 0.08) * (reducedMotion ? 1 : 0.8 + Math.sin(elapsed) * 0.2);
-      ctx.strokeStyle = "#2d281f";
-      ctx.lineWidth = 0.8;
-      ctx.beginPath();
-      ctx.moveTo(root.x, root.y + 13);
-      ctx.quadraticCurveTo(root.x - 8, root.y + 36, baseX - 6, baseY - 37);
-      ctx.moveTo(root.x, root.y + 13);
-      ctx.quadraticCurveTo(root.x + 8, root.y + 36, baseX + 7, baseY - 38);
-      ctx.stroke();
       ctx.restore();
     };
 
     const render = (now) => {
       const elapsed = (now - start) / 1000;
-      const growth = reducedMotion ? 1 : clamp(elapsed / 5.6, 0, 1);
-      const matrix = reducedMotion ? 0.82 : clamp((elapsed - 5.1) / 5.8, 0, 0.82);
+      const growth = reducedMotion ? 1 : clamp(elapsed / 4.8, 0, 1);
       const scroll = scrollRef.current;
-      const breath = reducedMotion ? 0 : Math.sin(elapsed * 0.85) * 0.018;
+      const breath = reducedMotion ? 0 : Math.sin(elapsed * 0.75) * 0.014;
       const pointer = pointerRef.current;
 
       ctx.clearRect(0, 0, width, height);
-      ctx.save();
-      ctx.translate(width * 0.5, height * 0.6);
-      ctx.scale(1 + breath - scroll * 0.018, 1 + breath - scroll * 0.018);
-      ctx.translate(-width * 0.5, -height * 0.6);
+      drawSandGarden(elapsed, growth, scroll, breath);
 
-      const positions = nodes.map((node) => {
-        const bornProgress = clamp((growth - node.born) / 0.18, 0, 1);
-        const grown = easeOutCubic(bornProgress);
-        const organize = easeOutCubic(matrix);
-        const disperseAngle = node.phase + node.id * 0.31;
-        const disperse = scroll * Math.min(width, height) * 0.42;
-        const gx = nodes[0].x + (node.x - nodes[0].x) * grown;
-        const gy = nodes[0].y + (node.y - nodes[0].y) * grown;
-        let x = gx + (node.tx - gx) * organize + Math.cos(disperseAngle) * disperse;
-        let y = gy + (node.ty - gy) * organize + Math.sin(disperseAngle) * disperse * 0.72;
+      garden.glyphs.forEach((glyph) => {
+        const bornProgress = clamp((growth - glyph.born) / 0.2, 0, 1);
+        const appear = easeOutCubic(bornProgress);
+        const driftAngle = glyph.phase + glyph.id * 0.37;
+        const disperse = scroll * Math.min(width, height) * 0.38;
+        let x = garden.cx + (glyph.tx - garden.cx) * appear + Math.cos(driftAngle) * disperse;
+        let y = garden.cy + (glyph.ty - garden.cy) * appear + Math.sin(driftAngle) * disperse * 0.68;
 
-        if (pointer.active && grown > 0) {
+        if (pointer.active && appear > 0) {
           const dx = x - pointer.x;
           const dy = y - pointer.y;
           const distance = Math.hypot(dx, dy);
-          const influence = clamp(1 - distance / 150, 0, 1);
+          const influence = clamp(1 - distance / 145, 0, 1);
           if (influence > 0) {
-            const direction = node.id % 3 === 0 ? -1 : 1;
-            x += (dx / Math.max(distance, 1)) * influence * 22 * direction;
-            y += (dy / Math.max(distance, 1)) * influence * 16 * direction;
+            const direction = glyph.id % 4 === 0 ? -1 : 1;
+            x += (dx / Math.max(distance, 1)) * influence * 18 * direction;
+            y += (dy / Math.max(distance, 1)) * influence * 12 * direction;
           }
         }
 
-        return {
-          x,
-          y,
-          alpha: grown * (0.76 - scroll * 0.28 + Math.sin(elapsed + node.phase) * 0.045),
-          scale: grown * (1 + Math.sin(elapsed * 0.7 + node.phase) * 0.025),
-        };
+        const shimmer = reducedMotion ? 0 : Math.sin(elapsed * 0.72 + glyph.phase) * 0.04;
+        const alpha = appear * (glyph.anchor ? 0.72 : 0.5) - scroll * 0.18 + shimmer;
+        const scale = appear * (1 + (reducedMotion ? 0 : Math.sin(elapsed * 0.45 + glyph.phase) * 0.025));
+        drawGlyph(glyph, x, y, clamp(alpha, 0, 0.88), scale, elapsed);
       });
 
-      ctx.lineWidth = 1;
-      nodes.forEach((node) => {
-        if (node.parent < 0) {
-          return;
-        }
-        const current = positions[node.id];
-        const parent = positions[node.parent];
-        if (!current || !parent) {
-          return;
-        }
-        const alpha = Math.min(current.alpha, parent.alpha) * (0.22 - scroll * 0.09);
-        ctx.beginPath();
-        ctx.moveTo(parent.x, parent.y);
-        ctx.lineTo(current.x, current.y);
-        ctx.strokeStyle = `rgba(44, 38, 28, ${clamp(alpha, 0, 0.22)})`;
-        ctx.stroke();
-      });
-
-      positions.forEach((position, index) => {
-        const node = nodes[index];
-        drawGlyph(node, position.x, position.y, clamp(position.alpha, 0, 0.92), position.scale);
-      });
-
-      drawCodeHermit(positions[0], elapsed, scroll);
-
-      ctx.globalAlpha = 0.18 - scroll * 0.08;
-      ctx.strokeStyle = "#2d281f";
-      ctx.lineWidth = 0.8;
-      const root = positions[0];
-      BAGUA.forEach((_, index) => {
-        const angle = -Math.PI / 2 + (index / 8) * Math.PI * 2;
-        const radius = Math.min(width, height) * 0.27;
-        ctx.beginPath();
-        ctx.moveTo(root.x, root.y);
-        ctx.lineTo(root.x + Math.cos(angle) * radius, root.y + Math.sin(angle) * radius * 0.78);
-        ctx.stroke();
-      });
-      ctx.restore();
+      drawCodeHermit(elapsed, scroll);
 
       if (!reducedMotion) {
         rafId = requestAnimationFrame(render);

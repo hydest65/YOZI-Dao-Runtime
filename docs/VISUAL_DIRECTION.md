@@ -6,7 +6,7 @@ The homepage should feel poetic, mysterious, restrained, warm, and premium.
 
 ## Core Idea
 
-The main visual is a living symbolic organism made entirely from code characters, Bagua symbols, simple lines, dots, coordinates, and subtle motion.
+The main visual is now a symbolic sand garden made entirely from code characters, Bagua symbols, simple lines, dots, coordinates, rake marks, and subtle motion.
 
 It should suggest a digital cultivation system without using literal religious, fantasy, landscape, or character illustration.
 
@@ -16,6 +16,7 @@ It should suggest a digital cultivation system without using literal religious, 
 - Text symbols.
 - Bagua trigrams.
 - Thin low-opacity lines.
+- Rake-like ellipses and sparse sand-field paths.
 - Sparse dots and coordinate-like marks.
 - Warm paper-like backgrounds.
 - Restrained ink-like foreground colors.
@@ -57,7 +58,7 @@ Avoid scaling body text with viewport width. Keep letter spacing non-negative.
 
 Motion should be almost meditative:
 
-- Growth should feel slow and intentional.
+- Garden reveal should feel slow and intentional.
 - Breathing should be barely perceptible.
 - Pointer response should feel like attention, not a game effect.
 - Scroll dispersal should feel like symbols returning to field state.
@@ -76,4 +77,4 @@ It may be relaxed and slightly humorous, but should remain quiet:
 - No religious figure treatment.
 - No exaggerated cuteness.
 
-Think: a tiny system operator sitting beneath the root, quietly watching the branch runtime breathe.
+Think: a tiny system operator sitting at the edge of a symbolic sand garden, quietly watching the runtime settle.

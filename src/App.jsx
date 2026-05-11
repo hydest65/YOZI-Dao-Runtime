@@ -38,14 +38,14 @@ export default function App() {
           <p className="text-xs uppercase tracking-[0.42em] text-[#746a55]">runtime.field</p>
           <div className="space-y-7 text-lg leading-8 text-[#2b271f]">
             <p>
-              A quiet symbolic layer for systems that grow inward first: breath,
-              branch, kernel, void.
+              A quiet symbolic garden for systems that settle inward first:
+              breath, kernel, void, form.
             </p>
             <div className="grid gap-3 text-sm text-[#514a3b] sm:grid-cols-4">
               <span>☰ kernel</span>
               <span>☵ breath</span>
-              <span>☴ branch</span>
               <span>☷ void</span>
+              <span>☲ form</span>
             </div>
           </div>
         </div>

@@ -13,7 +13,7 @@ Use this as a working queue for future YOZI Dao Runtime development.
 
 - Add a small configuration layer for animation density, compact layout, symbol set, and timing.
 - Tune mobile composition on several breakpoints: `390x844`, `430x932`, `768x1024`.
-- Consider making the boot phase slightly more legible before the tree grows.
+- Consider making the boot phase slightly more legible before the garden reveals.
 - Add optional coordinate ticks or sparse axis marks that do not make the page feel technical-heavy.
 - Keep the Code Hermit secondary and avoid giving it mascot energy.
 
@@ -39,8 +39,8 @@ Use this as a working queue for future YOZI Dao Runtime development.
 ## Done
 
 - Created Vite React homepage.
-- Added Canvas Living Code Tree.
-- Added Bagua matrix stabilization.
+- Added Canvas symbolic sand garden.
+- Added Bagua directional placement.
 - Added pointer response and scroll dispersal.
 - Added Code Hermit.
 - Added project memory skill.

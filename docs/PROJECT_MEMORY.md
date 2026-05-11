@@ -16,14 +16,13 @@ The animation is rendered with Canvas 2D, not images, WebGL, or a large DOM part
 
 ## Main Animation
 
-`YoziSymbolicOrganism` creates a Living Code Tree:
+`YoziSymbolicOrganism` now creates a Symbol Sand Garden:
 
-- A root node appears near the lower center.
-- Branches grow from the root using text/code symbols.
-- Nodes are glyphs, words, Bagua trigrams, and Chinese characters.
-- Thin low-opacity lines connect parent and child nodes.
-- After growth, the tree stabilizes into a loose eight-direction Bagua-inspired matrix.
-- The organism breathes through subtle opacity and scale movement.
+- A quiet center glyph appears in a paper-like field.
+- Rake-like ellipses and soft horizontal sand lines reveal around the center.
+- Glyphs, words, Bagua trigrams, and Chinese characters settle into sparse garden positions.
+- Eight Bagua directions act as quiet orientation lines.
+- The garden breathes through subtle opacity and scale movement.
 - Pointer movement gently affects nearby nodes.
 - Scrolling disperses the organism into a sparse symbol field.
 - Reduced motion users receive a stable composition.
@@ -39,7 +38,7 @@ dao qi void inner branch runtime kernel breath fate
 
 ## Code Hermit
 
-A small "Code Hermit" sits below the tree root. It is drawn inside the same Canvas:
+A small "Code Hermit" sits near the symbolic sand garden. It is drawn inside the same Canvas:
 
 - Simple seated line figure.
 - Minimal head with `::`.
@@ -51,21 +50,21 @@ A small "Code Hermit" sits below the tree root. It is drawn inside the same Canv
 
 ```text
 > breath.sync = true
-> observe(branch)
+> observe(sand)
 > stillness.log()
 > cultivation.progress += 0.01
 ```
 
-It should remain secondary to the Living Code Tree.
+It should remain secondary to the symbolic sand garden.
 
 ## Responsive Adjustment
 
-Mobile was checked at `390x844`. The tree root was moved lower on compact screens because the first mobile version overlapped the subtitle.
+Mobile was checked at `390x844`. The symbolic center should stay low enough that the hero title and subtitle remain visually dominant.
 
 Current compact layout intent:
 
-- Root sits lower than desktop.
-- Spread is reduced.
+- Symbolic center sits lower than desktop.
+- Garden radius is reduced.
 - Hero text stays visually dominant and readable.
 
 ## Validation History
