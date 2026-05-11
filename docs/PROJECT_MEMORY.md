@@ -4,7 +4,14 @@ This document captures the current state of the YOZI Dao Runtime homepage so fut
 
 ## What Exists Now
 
-The project is a Vite React app with Tailwind CSS. The homepage is implemented in `src/App.jsx`, and the main animation lives in `src/components/YoziSymbolicOrganism.jsx`.
+The project is a Vite React app using TypeScript, Tailwind CSS, and Canvas 2D.
+
+Main files:
+
+- `src/App.tsx`
+- `src/components/YoziHero.tsx`
+- `src/main.tsx`
+- `src/styles.css`
 
 The hero page presents:
 
@@ -12,71 +19,65 @@ The hero page presents:
 - `Cultivate the Invisible System`
 - `yozi.runtime.boot()`
 
-The animation is rendered with Canvas 2D, not images, WebGL, or a large DOM particle system.
+## Current Hero Direction
 
-## Main Animation
+The current first working version is a symbolic ink-landscape travel scene.
 
-`YoziSymbolicOrganism` now creates a Symbol Sand Garden:
+It should communicate:
 
-- A quiet center glyph appears in a paper-like field.
-- Rake-like ellipses and soft horizontal sand lines reveal around the center.
-- Glyphs, words, Bagua trigrams, and Chinese characters settle into sparse garden positions.
-- Eight Bagua directions act as quiet orientation lines.
-- The garden breathes through subtle opacity and scale movement.
-- Pointer movement gently affects nearby nodes.
-- Scrolling disperses the organism into a sparse symbol field.
-- Reduced motion users receive a stable composition.
+- Chinese cultivation atmosphere.
+- Ink-wash mountain spaciousness.
+- Abstract code-based visual language.
+- `天地之大，人之渺小`: vast heaven and earth, tiny human traveler.
 
-Important symbol vocabulary:
+All scene elements are drawn procedurally with Canvas and typography-like marks. No images, WebGL, Bagua diagram, cyberpunk neon, or fantasy game splash styling.
 
-```text
-☰ ☱ ☲ ☳ ☴ ☵ ☶ ☷
-{ } [ ] ( ) < > / \ | :: => -> 0 1
-dao qi void inner branch runtime kernel breath fate
-道 枝 玄 息 观 空 象
-```
+## Scene Architecture
 
-## Code Hermit
+`YoziHero` owns the hero layout and a Canvas scene layer. The Canvas renderer is organized around these layers:
 
-A small "Code Hermit" sits near the symbolic sand garden. It is drawn inside the same Canvas:
+1. background mist
+2. mountain layer
+3. cloud layer
+4. crane layer
+5. road/code-flow layer
+6. tiny traveler layer
+7. foreground drifting particles
+8. React/Tailwind text overlay
 
-- Simple seated line figure.
-- Minimal head with `::`.
-- Tiny terminal marked `>_`.
-- Small cup beside the figure.
-- Gentle breathing motion.
-- Head subtly turns toward the cursor.
-- Occasionally shows one small terminal line:
+The scene exposes tunable constants in `SCENE`:
 
-```text
-> breath.sync = true
-> observe(sand)
-> stillness.log()
-> cultivation.progress += 0.01
-```
+- `motion`
+- `density`
+- `opacity`
+- `scale`
 
-It should remain secondary to the symbolic sand garden.
+## Visual Elements
 
-## Responsive Adjustment
-
-Mobile was checked at `390x844`. The symbolic center should stay low enough that the hero title and subtitle remain visually dominant.
-
-Current compact layout intent:
-
-- Symbolic center sits lower than desktop.
-- Garden radius is reduced.
-- Hero text stays visually dominant and readable.
+- Mountains are built from vertical code symbols, punctuation, Chinese characters, and sparse outline strokes.
+- Road is a long perspective path with flowing text fragments.
+- Traveler is intentionally tiny and abstract, with a minimal walking cycle and robe-like trailing motion.
+- Cranes are reduced to light strokes and small typographic marks.
+- Clouds and mist use sparse curves, particles, and gradients.
+- Atmospheric particles drift slowly and respond subtly to pointer movement.
 
 ## Validation History
 
 Completed checks:
 
 - `npm install`
+- `npm run typecheck`
 - `npm run build`
-- Browser check at `http://localhost:5173`
-- Desktop screenshot inspection
-- Mobile screenshot inspection
+- Browser desktop screenshot inspection
+- Browser mobile screenshot inspection at `390x844`
 - Console error check: none observed
+
+## Known Refinement Areas
+
+- Mobile composition is working but visually dense.
+- Mountain peaks and symbols can be tuned to sit more gracefully around the title.
+- The traveler/road animation is structurally present; robe and stride details can be refined.
+- Ink-wash tone can be softened with better opacity, particle spacing, and mist layering.
 
 ## GitHub
 
@@ -86,22 +87,4 @@ Repository:
 https://github.com/hydest65/YOZI-Dao-Runtime
 ```
 
-Initial commit:
-
-```text
-71fa2cd Create YOZI Dao Runtime homepage
-```
-
-## Local Skill Memory
-
-A project memory skill exists at:
-
-```text
-skills/yozi-dao-runtime-memory/SKILL.md
-```
-
-It was also installed locally to:
-
-```text
-C:\Users\Hydest\.codex\skills\yozi-dao-runtime-memory
-```
+Latest direction commit should mention the TypeScript symbolic landscape hero.
